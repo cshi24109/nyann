@@ -1,7 +1,366 @@
-<!doctype html>
-<meta charset=
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        /* --- リセット & 共通設定 --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-"utf-8">
-<title>自己紹介</title>
-<h1>自己紹介</h1>
-<p>授業で作成したページです。</p>
+        :root {
+            --bg-color: #f8f9fa;
+            --header-bg: rgba(248, 249, 250, 0.8);
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --accent-color: #4f46e5;
+            --accent-hover: #4338ca;
+            --border-color: #e5e7eb;
+            --text-muted: #6b7280;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --header-bg: rgba(15, 23, 42, 0.8);
+            --text-color: #f8fafc;
+            --card-bg: #1e293b;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --border-color: #334155;
+            --text-muted: #94a3b8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- ヘッダー --- */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* テーマ切り替えボタン */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 0.8rem;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--border-color);
+        }
+
+        /* --- セクション共通 --- */
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            margin-bottom: 24px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        /* --- About セクション --- */
+        .about-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .profile-txt {
+            font-size: 1.05rem;
+        }
+
+        /* --- Skills セクション --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+        }
+
+        .skill-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .skill-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .skill-level {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* --- Works セクション --- */
+        .works-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 600px) {
+            .works-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .work-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .work-img-dummy {
+            height: 160px;
+            background: linear-gradient(135deg, var(--accent-color), #818cf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .work-content {
+            padding: 16px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .work-title {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .work-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .work-tag {
+            display: inline-block;
+            background-color: var(--bg-color);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- Reflection セクション --- */
+        .reflection-content {
+            background-color: var(--card-bg);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .reflection-content p {
+            margin-bottom: 12px;
+        }
+
+        .reflection-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- フッター --- */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* --- スマートフォン向け微調整 --- */
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 10px;
+            }
+            .nav-links a {
+                font-size: 0.8rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-container">
+            <div class="logo">Portfolio</div>
+            <nav style="display: flex; align-items: center; gap: 15px;">
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#works">Works</a></li>
+                    <li><a href="#reflection">Reflection</a></li>
+                </ul>
+                <button class="theme-toggle" id="themeToggle" aria-label="テーマ切り替え">Dark</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section id="about">
+            <h2 class="section-title">About</h2>
+            <div class="about-grid">
+                <p class="profile-txt">
+                    はじめまして。ご覧いただきありがとうございます。日本のWeb技術やものづくりに関心を持つ、クリエイター / 開発者です。シンプルで使いやすく、人々の課題を解決するデジタルコンテンツの制作を目指しています。
+                </p>
+                <p class="profile-txt" style="color: var(--text-muted); font-size: 0.95rem;">
+                    ※個人情報保護の観点から、名前や詳細な経歴、連絡先などの掲載を控えています。成果物やスキルセットを通じて、私のアプローチや一貫した姿勢を感じていただければ幸いです。
+                </p>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-name">HTML / CSS</div>
+                    <div class="skill-level">スマートな設計</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-name">JavaScript</div>
+                    <div class="skill-level">動的なUI実装</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-name">UI / UX Design</div>
+                    <div class="skill-level">使いやすさの追求</div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-name">Problem Solving</div>
+                    <div class="skill-level">課題の分析と解決</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="works">
+            <h2 class="section-title">Works</h2>
+            <div class="works-grid">
+                <div class="work-card">
+                    <div class="work-img-dummy">Project A</div>
+                    <div class="work-content">
+                        <div>
+                            <h3 class="work-title">軽量タスク管理ツール</h3>
+                            <p class="work-desc">無駄な機能を削ぎ落とし、直感的な操作感と高速な動作を重視して構築した個人向けのWebアプリケーションです。</p>
+                        </div>
+                        <div>
+                            <span class="work-tag">JavaScript</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="work-card">
+                    <div class="work-img-dummy">Project B</div>
+                    <div class="work-content">
+                        <div>
+                            <h3 class="work-title">レスポンシブ UI コンポーネント</h3>
+                            <p class="work-desc">スマートフォンの片手操作に最適化された、再利用性の高いナビゲーションやカードレイアウトのパーツ集です。</p>
+                        </div>
+                        <div>
+                            <span class="work-tag">CSS / HTML</span>
+                        </div>
+                    </div>
